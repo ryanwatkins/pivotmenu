@@ -12,8 +12,7 @@ For more information, see http://www.ryanwatkins.net/software/pivotmenu/
 */
 
 /*
- *
- * Copyright © 2012 Ryan Watkins <ryan@ryanwatkins.net>
+ * Copyright © 2013 Ryan Watkins <ryan@ryanwatkins.net>
  *
  * Permission to use, copy, modify, distribute, and sell this software
  * and its documentation for any purpose is hereby granted without
