@@ -3,9 +3,10 @@
 // FIXME: inherit from Arranger, not LeftRightArranger
 // FIXME: handle 1 panel Pivots
 // FIXME: handle 2 panel Pivots
+// TODO: set class on activation to animate content in
 
 enyo.kind({
-  name: "isis.PivotMenuArranger",
+  name: "rwatkins.PivotMenuArranger",
   kind: "enyo.LeftRightArranger",
 
   // no margin adjust
@@ -24,7 +25,6 @@ enyo.kind({
   },
 
   arrange: function(inC, inIndex) {
-    // enyo.log(inC, inIndex);
     var i,c,v,b;
 
     var o = 1; // only offset one when rotating panels, dont center
@@ -76,7 +76,7 @@ enyo.kind({
     this.inherited(arguments);
 
     // hide incoming panels till finish
-    _.each(this.container.getPanels(), function(panel) {
+    enyo.forEach(this.container.getPanels(), function(panel) {
       panel.hide();
     });
     var panel = this.container.getActive();

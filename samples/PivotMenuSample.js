@@ -3,32 +3,41 @@
 enyo.kind({
   name: "PivotMenuSample",
   kind: "rwatkins.PivotMenu",
+  classes: "enyo-unselectable",
 
   margin: 100, // px margin
 
   components: [
     { name: "panel1", classes: "pivotmenu-panel",
       horizontal: "hidden",
-      header: "header 1",
-      title: "title 1",
+      header: "first header",
+      title: "first title",
       components: [
-        { content: "content 1" }
+        { content: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat." }
       ]
     },
     { name: "panel2", classes: "pivotmenu-panel",
       horizontal: "hidden",
-      header: "header 2",
-      title: "title 2",
+      header: "second header",
+      title: "second title",
       components: [
-        { content: "content 2" }
+        { content: "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat." }
       ]
     },
     { name: "panel3", classes: "pivotmenu-panel",
       horizontal: "hidden",
-      header: "header 3",
-      title: "title 3",
+      header: "third header",
+      title: "third title",
       components: [
-        { content: "content 3" }
+        { content: "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat." }
+      ]
+    },
+    { name: "panel4", classes: "pivotmenu-panel",
+      horizontal: "hidden",
+      header: "fourth header",
+      title: "last title",
+      components: [
+        { content: "Vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi." }
       ]
     }
   ]

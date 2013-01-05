@@ -1,4 +1,28 @@
-// PivotMenu.js
+/** 
+The _rwatkins.PivotMenu_ kind is designed to provide an
+enyo.Panels-like control with an Arranger that simualtes the Windows
+Phone 8 Pivot Menu control.
+
+Any Enyo control may be placed inside an _rwatkins.PivotMenu_, but by
+convention we refer to each of these controls as a "panel." The active
+panel is the one in front, and the user can slide left or right to
+bring other panels into the viewport.
+
+For more information, see http://www.ryanwatkins.net/software/pivotmenu/
+*/
+
+/*
+ *
+ * Copyright © 2012 Ryan Watkins <ryan@ryanwatkins.net>
+ *
+ * Permission to use, copy, modify, distribute, and sell this software
+ * and its documentation for any purpose is hereby granted without
+ * fee, provided that the above copyright notice appear in all copies
+ * and that both that copyright notice and this permission notice
+ * appear in supporting documentation. No representations are made
+ * about the suitability of this software for any purpose. It is
+ * provided "as is" without express or implied warranty.
+ */
 
 // FIXME: have arranger directly call moveHandler
 
@@ -16,7 +40,6 @@ enyo.kind({
   },
 
   handlers: {
-//    onTransitionStart: "panelsTransitionStartHandler",
     onTransitionFinish: "panelsTransitionFinishHandler",
 
     onMove: "moveHandler"
@@ -27,6 +50,7 @@ enyo.kind({
     { name: "_header", classes: "rwatkins-pivotmenu-header" }
   ],
 
+  //* @protected
   rendered: function() {
     this.inherited(arguments);
     this.createHeaders();
@@ -41,7 +65,7 @@ enyo.kind({
   getPanels: function() {
     var p = this.controlParent || this;
     var panels = [];
-    _.each(p.children, function(child) {
+    enyo.forEach(p.children, function(child) {
       if ((child.name !== "_title") && (child.name !== "_header")) {
         panels.push(child);
       }
@@ -70,7 +94,7 @@ enyo.kind({
     var panels = this.layout.getOrderedControls();
     var active = this.getActive();
     var items = [];
-    var panel = _.last(panels);
+    var panel = panels.slice(-1)[0];
 
     if (!panel || !active) { return; }
     // reorder to active panel first
@@ -86,7 +110,7 @@ enyo.kind({
       ontap: "headeritemTapHandler"
     });
 
-    _.each(panels, function(panel) {
+    enyo.forEach(panels, function(panel) {
       items.push({
         kind: "rwatkins.PivotHeaderItem",
         active: (panel.name == active.name),
@@ -108,9 +132,7 @@ enyo.kind({
       var width = header.getBounds().width * -1;
       var l = width + "px";
       enyo.dom.transform(this.$._header, {translateX: l || null, translateY: null});
-    } else {
-      this.log("ERROR", headers);
-    }
+    } 
   },
 
   headeritemTapHandler: function(inSender, inEvent) {
@@ -137,13 +159,23 @@ enyo.kind({
     return true;
   },
 
-  // Hook into to set active header
-/*
-  panelsTransitionStartHandler: function() {
-  },
-*/
   panelsTransitionFinishHandler: function() {
     this.createHeaders();
+  },
+
+  //* @public
+  //* Select a panel by name rather than index
+  setIndexByName: function(name) {
+    var panels = this.getPanels();
+
+    for (var i=0; i<panels.length; i++) {
+      var panel = panels[i];
+      if (panel && (panel.name == name)) {
+        this.setIndex(i);
+        return true;
+      }
+    }
+    return false;
   }
 
 });
