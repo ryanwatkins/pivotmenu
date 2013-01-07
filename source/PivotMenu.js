@@ -23,8 +23,6 @@ For more information, see http://www.ryanwatkins.net/software/pivotmenu/
  * provided "as is" without express or implied warranty.
  */
 
-// FIXME: have arranger directly call moveHandler
-
 enyo.kind({
   name: "rwatkins.PivotMenu",
   kind: "Panels",
@@ -39,9 +37,7 @@ enyo.kind({
   },
 
   handlers: {
-    onTransitionFinish: "panelsTransitionFinishHandler",
-
-    onMove: "moveHandler"
+    onTransitionFinish: "panelsTransitionFinishHandler"
   },
 
   chrome: [
@@ -139,19 +135,19 @@ enyo.kind({
     return;
   },
 
-  moveHandler: function(inSender, inEvent) {
+  moveHandler: function(params) {
     if (this.$._header) {
       var headers = this.$._header.getClientControls();
       var header0 = headers[0];
       var header1 = headers[1];
     }
 
-    if (header0 && header1 && inEvent) {
+    if (header0 && header1 && params) {
       var width0 = header0.getBounds().width;
       var width1 = header1.getBounds().width;
-      var l = ((inEvent.panelposition * width1) - width0) + "px";
-      if (inEvent.panelposition > 0) {
-        l = ((inEvent.panelposition * width0) - width0) + "px";
+      var l = ((params.position * width1) - width0) + "px";
+      if (params.position > 0) {
+        l = ((params.position * width0) - width0) + "px";
       }
       enyo.dom.transform(this.$._header, {translateX: l || null, translateY: null});
     }

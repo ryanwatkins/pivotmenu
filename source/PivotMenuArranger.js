@@ -1,6 +1,5 @@
 /* PivotMenuArranger.js */
 /*
- *
  * Copyright © 2013 Ryan Watkins <ryan@ryanwatkins.net>
  *
  * Permission to use, copy, modify, distribute, and sell this software
@@ -108,8 +107,8 @@ enyo.kind({
     if (index < 0) { index = this.c$.length + index; }
 
     if (arrangement[index] !== undefined) {
-      var panelposition = (arrangement[index].left) / box;
-      this.container.bubble("onMove", { panelposition: panelposition } );
+      var position = (arrangement[index].left) / box;
+      this.container.moveHandler({ position: position });
     }
   }
 
