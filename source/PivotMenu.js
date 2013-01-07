@@ -1,4 +1,4 @@
-/** 
+/**
 The _rwatkins.PivotMenu_ kind is designed to provide an
 enyo.Panels-like control with an Arranger that simualtes the Windows
 Phone 8 Pivot Menu control.

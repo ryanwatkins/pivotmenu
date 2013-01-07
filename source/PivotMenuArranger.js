@@ -11,14 +11,20 @@
  * provided "as is" without express or implied warranty.
  */
 
-// FIXME: inherit from Arranger, not LeftRightArranger
-// FIXME: handle 1 panel Pivots
-// FIXME: handle 2 panel Pivots
+// FIXME: handle scrolling backgwards in 2 panel Pivots
 // TODO: set class on activation to animate content in
 
 enyo.kind({
   name: "rwatkins.PivotMenuArranger",
-  kind: "enyo.LeftRightArranger",
+  kind: "enyo.Arranger",
+
+  axisSize: "width",
+  offAxisSize: "height",
+  axisPosition: "left",
+  constructor: function() {
+    this.inherited(arguments);
+    this.margin = this.container.margin != null ? this.container.margin : this.margin;
+  },
 
   // no margin adjust
   size: function() {
@@ -37,6 +43,13 @@ enyo.kind({
 
   arrange: function(inC, inIndex) {
     var i,c,v,b;
+
+    if (this.container.getPanels().length == 1) {
+      b = {};
+      b[this.axisPosition] = 0; // no margin
+      this.arrangeControl(this.container.getPanels()[0], b);
+      return;
+    }
 
     var o = 1; // only offset one when rotating panels, dont center
     var c$ = this.getOrderedControls(Math.floor(inIndex)-o);
@@ -59,18 +72,26 @@ enyo.kind({
   start: function() {
     this.inherited(arguments);
 
+    var panels = this.container.getPanels();
+    if (panels.length == 1) {
+      return;
+    }
+
     var s = this.container.fromIndex;
     var f = this.container.toIndex;
     var c$ = this.getOrderedControls(f);
     var o = 1;
 
-    for (var i=0, c; (c=c$[i]); i++) {
-// slide in contents of recently activated panel
-/*
-      if (i == f) {
-        c.addClass('shift');
-      }
-*/
+//    var active = (f % c$.length);
+//    if (active < 0) { active = c$.length - active; }
+
+   for (var i=0, c; (c=c$[i]); i++) {
+
+//     if (i == active) {
+//       enyo.log('shift', panel.name, i, active);
+//       c.addClass('shift');
+//     }
+
       if (s > f){
         if (i == (c$.length - o)){
           c.hide();
@@ -83,9 +104,8 @@ enyo.kind({
     }
 
   },
-  finish: function() {
-    this.inherited(arguments);
 
+  finish: function() {
     // hide incoming panels till finish
     enyo.forEach(this.container.getPanels(), function(panel) {
       panel.hide();
@@ -93,12 +113,17 @@ enyo.kind({
     var panel = this.container.getActive();
     if (panel) {
       panel.show();
+//      enyo.log('unshift', panel.name);
 //      panel.removeClass('shift');
     }
   },
 
   flowArrangement: function() {
     this.inherited(arguments);
+
+    if (this.container.getPanels().length == 1) {
+      return;
+    }
 
     var box = this.box;
     var arrangement = this.container.arrangement;
@@ -110,6 +135,29 @@ enyo.kind({
       var position = (arrangement[index].left) / box;
       this.container.moveHandler({ position: position });
     }
+  },
+
+  calcArrangementDifference: function(inI0, inA0, inI1, inA1) {
+    if (this.container.getPanels().length == 1) {
+      return 0;
+    }
+    var i = Math.abs(inI0 % this.c$.length);
+    return inA0[i][this.axisPosition] - inA1[i][this.axisPosition];
+  },
+
+  destroy: function() {
+    var c$ = this.container.getPanels();
+    for (var i=0, c; (c=c$[i]); i++) {
+      enyo.Arranger.positionControl(c, {left: null, top: null});
+      enyo.Arranger.opacifyControl(c, 1);
+      c.applyStyle("left", null);
+      c.applyStyle("top", null);
+      c.applyStyle("height", null);
+      c.applyStyle("width", null);
+      c.show();
+    }
+    this.inherited(arguments);
   }
+
 
 });
