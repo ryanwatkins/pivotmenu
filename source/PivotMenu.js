@@ -72,9 +72,6 @@ enyo.kind({
     this.inherited(arguments);
     var panel = this.getActive();
 
-    // update history as we move thru Panorama or PivotMenus
-    this.bubbleUp("onNavUpdate", { action: this.name, panel: panel.name });
-
     // change _title to match panel
     if (panel.title && this.$._title) {
       if (panel.title !== this.$._title.getContent()) {
@@ -127,9 +124,10 @@ enyo.kind({
       var width = header.getBounds().width * -1;
       var l = width + "px";
       enyo.dom.transform(this.$._header, {translateX: l || null, translateY: null});
-    } 
+    }
   },
 
+  // tapping a header item slides that panel into the active position
   headeritemTapHandler: function(inSender, inEvent) {
     var panel = this.getActive();
     if (panel.name !== inSender.panelname) {
@@ -138,6 +136,7 @@ enyo.kind({
     return;
   },
 
+  // move the headers as the panels slide
   moveHandler: function(params) {
     if (this.$._header) {
       var headers = this.$._header.getClientControls();
@@ -178,14 +177,14 @@ enyo.kind({
 
 });
 
-
+/* individual items in the header, one per panel */
 enyo.kind({
   name: "rwatkins.PivotHeaderItem",
   classes: "rwatkins-pivotmenu-header-item",
 
   published: {
     label: "",
-    active: false
+    active: false /* non-active headers are partially transparent */
   },
 
   components: [
