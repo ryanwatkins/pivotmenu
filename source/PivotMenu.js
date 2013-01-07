@@ -131,7 +131,10 @@ enyo.kind({
   },
 
   headeritemTapHandler: function(inSender, inEvent) {
-    this.setIndexByName(inSender.panelname);
+    var panel = this.getActive();
+    if (panel.name !== inSender.panelname) {
+      this.setIndexByName(inSender.panelname);
+    }
     return;
   },
 

@@ -15,18 +15,11 @@
 .rwatkins-pivotmenu-header {
   font-size: 3em;
 
-  white-space: nowrap;
   padding-left: 20px;
   padding-top: 60px;
 }
 
 .rwatkins-pivotmenu-header-item {
-  color: #c0c0c0;
-
-  display: inline-block;
-  padding-right: 0.5em;
+   padding-right: 0.5em;
 }
 
-.rwatkins-pivotmenu-header-item.active {
-  color: black;
-}

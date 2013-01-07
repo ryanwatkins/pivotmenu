@@ -1,4 +1,6 @@
 enyo.depends(
   'PivotMenu.js',
-  'PivotMenuArranger.js'
+  'PivotMenuArranger.js',
+
+  'PivotMenu.css'
 );
