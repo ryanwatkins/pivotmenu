@@ -2,9 +2,9 @@
 
 .pivotmenu-panel {
   height: 100%;
-  margin-top: 140px; /* must be margin so header remains clickable */
 
   padding-left: 20px;
+  // border: 1px solid red;
 }
 
 .rwatkins-pivotmenu-title {

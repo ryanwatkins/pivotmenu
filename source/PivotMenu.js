@@ -23,6 +23,8 @@ For more information, see http://www.ryanwatkins.net/software/pivotmenu/
  * provided "as is" without express or implied warranty.
  */
 
+// FIXME: when sliding back the 'previous' header is wrong until snapped
+
 enyo.kind({
   name: "rwatkins.PivotMenu",
   kind: "Panels",
@@ -138,6 +140,8 @@ enyo.kind({
 
   // move the headers as the panels slide
   moveHandler: function(params) {
+    // params.position is -1 to 1 reflecting amount of forward or backwared
+    // drag since the last arrangement.
     if (this.$._header) {
       var headers = this.$._header.getClientControls();
       var header0 = headers[0];
