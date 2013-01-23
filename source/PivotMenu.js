@@ -24,6 +24,7 @@ For more information, see http://www.ryanwatkins.net/software/pivotmenu/
  */
 
 // FIXME: be more intelligent when scrolling forward, move offscreen header around earlier
+// FIXME: tapping the last header in the set doenst just slide to the next panel, it wraps around
 
 enyo.kind({
   name: "rwatkins.PivotMenu",
@@ -87,12 +88,11 @@ enyo.kind({
     if (!this.$._header) { return; }
 
     var panels = this.layout.getOrderedControls(this.index);
-    var active = this.getActive();
-    var items = [];
-
     if (!panels || (panels.length < 1)) { return; }
 
     panels.unshift(panels.pop());
+    var active = this.getActive();
+    var items = [];
 
     enyo.forEach(panels, function(panel) {
       items.push({
@@ -111,14 +111,11 @@ enyo.kind({
     var headers = this.$._header.getClientControls();
     var header = headers[0];
 
+    var l = "0px";
     if (header) {
-      var width = (header.getBounds().width) * -1;
-      var l = width + "px";
-      enyo.dom.transform(this.$._header, {translateX: l || null, translateY: null});
-    } else {
-      this.log('no header');
-      enyo.dom.transform(this.$._header, {translateX: "0px" || null, translateY: null});
+      l = (header.getBounds().width * -1) + "px";
     }
+    enyo.dom.transform(this.$._header, { translateX: l, translateY: null });
   },
 
   // tapping a header item slides that panel into the active position
@@ -148,9 +145,7 @@ enyo.kind({
         header = header1;
       }
       var width = ((header0.getBounds().width) * -1) + (params.position * header.getBounds().width);
-      enyo.dom.transform(this.$._header, {translateX: (width + "px") || null, translateY: null});
-    } else {
-      this.log("no header0");
+      enyo.dom.transform(this.$._header, { translateX: (width + "px") || null, translateY: null });
     }
 
     return true;

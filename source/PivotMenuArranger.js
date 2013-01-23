@@ -31,7 +31,11 @@ enyo.kind({
   },
 
   arrange: function(inC, inIndex) {
-//    enyo.log(inIndex, _.pluck(inC, "header"));
+
+    var index = inIndex;
+    // var index = inIndex.split(".")[0];
+    // enyo.log("arrange", index);
+
     var panels = this.c$;
 
     if (panels.length == 1) {
@@ -40,7 +44,7 @@ enyo.kind({
     }
 
     var offset = 1; // only offset one when rotating panels, dont center
-    var orderedPanels = this.getOrderedControls(Math.floor(inIndex) - offset);
+    var orderedPanels = this.getOrderedControls(Math.floor(index) - offset);
     var width = this.containerBounds.width;
     var left = width * offset * -1;
 
@@ -48,13 +52,28 @@ enyo.kind({
       this.arrangeControl(panel, { left: left });
       left += width;
     }, this);
-//    enyo.log(inIndex, _.pluck(orderedPanels, "header"));
+    // enyo.log(index, _.pluck(orderedPanels, "header"));
   },
 
-/*
   start: function() {
     this.inherited(arguments);
 
+    var active = this.container.getActive();
+    enyo.forEach(this.c$, function(panel, index) {
+      panel.setShowing((panel == active));
+    }, this);
+
+/*
+    var from = this.container.fromIndex;
+    var to = this.container.toIndex;
+
+    this.container.transitionPoints = [
+      from + ".f",
+      to + ".f"
+    ];
+*/
+
+/*
     // ignore single panel case
     if (panels.length == 1) { return; }
 
@@ -72,16 +91,18 @@ enyo.kind({
        c.addClass('shift');
      }
     });
-  },
 */
+  },
+
 
   finish: function() {
+    this.inherited(arguments);
 
     // hide incoming panels till finish
     var active = this.container.getActive();
-    enyo.forEach(this.c$, function(panel) {
+    enyo.forEach(this.c$, function(panel, index) {
       panel.setShowing((panel == active));
-    });
+    }, this);
 
     /* toggle class to allow for animation shift on finish
     if (active) {
@@ -109,16 +130,22 @@ enyo.kind({
     }
   },
 
-  calcArrangementDifference: function(inI0, inA0, inI1, inA1) {
+  calcArrangementDifference: function(inIndex0, inArrangement0, inIndex1, inArrangement1) {
+    var i0 = inIndex0;
+    var i1 = inIndex1;
+    // var i0 = inIndex0.split(".")[0];
+    // var i1 = inIndex1.split(".")[0];
+    // enyo.log("calcArrangementDifference", i0, i1);
+
     if (this.c$.length == 1) { return 0; }
 
-    var i = Math.abs(inI0 % this.c$.length);
+    var i = Math.abs(i0 % this.c$.length);
 
     // this is either + or - the width of PivotMenu, as panels have
     // consistent width.  We dont need to actual calc it each time for
     // a specific panel in the arrangement.  We just need the
     // direction
-    var difference = inA0[i]["left"] - inA1[i]["left"];
+    var difference = inArrangement0[i]["left"] - inArrangement1[i]["left"];
 
     return difference;
   },
