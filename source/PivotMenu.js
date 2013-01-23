@@ -23,7 +23,7 @@ For more information, see http://www.ryanwatkins.net/software/pivotmenu/
  * provided "as is" without express or implied warranty.
  */
 
-// FIXME: when sliding back the 'previous' header is wrong until snapped
+// FIXME: be more intelligent when scrolling forward, move offscreen header around earlier
 
 enyo.kind({
   name: "rwatkins.PivotMenu",
@@ -39,6 +39,7 @@ enyo.kind({
   },
 
   handlers: {
+    onTransitionStart: "panelsTransitionStartHandler",
     onTransitionFinish: "panelsTransitionFinishHandler"
   },
 
@@ -50,7 +51,6 @@ enyo.kind({
   //* @protected
   rendered: function() {
     this.inherited(arguments);
-    this.createHeaders();
   },
 
   initComponents: function() {
@@ -83,26 +83,16 @@ enyo.kind({
   },
 
   createHeaders: function() {
+
     if (!this.$._header) { return; }
 
-    var panels = this.layout.getOrderedControls();
+    var panels = this.layout.getOrderedControls(this.index);
     var active = this.getActive();
     var items = [];
-    var panel = panels.slice(-1)[0];
 
-    if (!panel || !active) { return; }
-    // reorder to active panel first
-    if (panels[0].name !== active.name) {
-      panels.push(panels.shift());
-    }
+    if (!panels || (panels.length < 1)) { return; }
 
-    items.push({
-      kind: "rwatkins.PivotHeaderItem",
-      active: (panel.name == active.name),
-      panelname: panel.name,
-      label: panel.header,
-      ontap: "headeritemTapHandler"
-    });
+    panels.unshift(panels.pop());
 
     enyo.forEach(panels, function(panel) {
       items.push({
@@ -118,14 +108,16 @@ enyo.kind({
     this.$._header.createComponents(items, { owner: this });
     this.$._header.render();
 
-    enyo.dom.transform(this.$._header, {translateX: "0px" || null, translateY: null});
-
     var headers = this.$._header.getClientControls();
     var header = headers[0];
+
     if (header) {
-      var width = header.getBounds().width * -1;
+      var width = (header.getBounds().width) * -1;
       var l = width + "px";
       enyo.dom.transform(this.$._header, {translateX: l || null, translateY: null});
+    } else {
+      this.log('no header');
+      enyo.dom.transform(this.$._header, {translateX: "0px" || null, translateY: null});
     }
   },
 
@@ -144,20 +136,27 @@ enyo.kind({
     // drag since the last arrangement.
     if (this.$._header) {
       var headers = this.$._header.getClientControls();
-      var header0 = headers[0];
-      var header1 = headers[1];
+      if (headers && headers.length > 1) {
+        var header0 = headers[0];
+        var header1 = headers[1];
+      }
     }
 
-    if (header0 && header1 && params) {
-      var width0 = header0.getBounds().width;
-      var width1 = header1.getBounds().width;
-      var l = ((params.position * width1) - width0) + "px";
-      if (params.position > 0) {
-        l = ((params.position * width0) - width0) + "px";
+    if (header0) {
+      var header = header0;
+      if (this.toIndex > this.fromIndex) {
+        header = header1;
       }
-      enyo.dom.transform(this.$._header, {translateX: l || null, translateY: null});
+      var width = ((header0.getBounds().width) * -1) + (params.position * header.getBounds().width);
+      enyo.dom.transform(this.$._header, {translateX: (width + "px") || null, translateY: null});
+    } else {
+      this.log("no header0");
     }
+
     return true;
+  },
+
+  panelsTransitionStartHandler: function() {
   },
 
   panelsTransitionFinishHandler: function() {

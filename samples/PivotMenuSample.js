@@ -33,6 +33,7 @@ enyo.kind({
         { content: "Third. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat." }
       ]
     },
+/*
     { name: "panel4", classes: "pivotmenu-panel",
       horizontal: "hidden",
       header: "fourth header",
@@ -41,7 +42,7 @@ enyo.kind({
         { content: "Fourth.  Vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi." }
       ]
     }
-
+*/
   ]
 
 });

@@ -12,6 +12,7 @@
  */
 
 // FIXME: handle scrolling backgwards in 2 panel Pivots
+// FIXME: wrapping panel not hidden if you swipe back fast enough
 // TODO: set class on activation to animate content in
 
 enyo.kind({
@@ -75,6 +76,7 @@ enyo.kind({
 */
 
   finish: function() {
+
     // hide incoming panels till finish
     var active = this.container.getActive();
     enyo.forEach(this.c$, function(panel) {
