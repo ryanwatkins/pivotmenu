@@ -8,8 +8,7 @@ You can side between panels by either tapping the headers or dragging the panels
 
 NOTES:
 
-- if there are only two panels, sliding back rather than forward drags the items in the wrong direction.
-- doesnt scroll the correct direction if you click a header too far ahead
+- if there are only two panels, and sliding backward rather than forward, the visible panel appears to be moving in the wrong direction.
 
 Tested platforms include: Chrome 24+, Safari 6.0.2+, Firefox 17+, Windows Phone 8.0
 

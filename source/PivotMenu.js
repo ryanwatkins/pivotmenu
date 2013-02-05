@@ -1,7 +1,7 @@
 /**
 The _rwatkins.PivotMenu_ kind is designed to provide an
-enyo.Panels-like control with an Arranger that simualtes the Windows
-Phone 8 Pivot Menu control.
+enyo.Panels-like control with an Arranger that simualtes the
+Windows Phone 8 Pivot Menu control.
 
 Any Enyo control may be placed inside an _rwatkins.PivotMenu_, but by
 convention we refer to each of these controls as a "panel." The active
@@ -23,8 +23,7 @@ For more information, see http://www.ryanwatkins.net/software/pivotmenu/
  * provided "as is" without express or implied warranty.
  */
 
-// FIXME: be more intelligent when scrolling forward, move offscreen header around earlier
-// FIXME: tapping the last header in the set doenst just slide to the next panel, it wraps around
+// FIXME: clicking third header when viewing first header scrolls wrong direction
 
 enyo.kind({
   name: "rwatkins.PivotMenu",
@@ -84,28 +83,34 @@ enyo.kind({
   },
 
   createHeaders: function() {
-
     if (!this.$._header) { return; }
+    var index = this.index - 1;
 
     var panels = this.layout.getOrderedControls(this.index);
     if (!panels || (panels.length < 1)) { return; }
 
     panels.unshift(panels.pop());
     var active = this.getActive();
-    var items = [];
+    var components = [];
+    var morecomponents = [];
 
     enyo.forEach(panels, function(panel) {
-      items.push({
+      var header = {
         kind: "rwatkins.PivotHeaderItem",
         active: (panel.name == active.name),
-        panelname: panel.name,
+        index: index,
         label: panel.header,
         ontap: "headeritemTapHandler"
-      });
+      };
+      components.push(header);
+      morecomponents.push(header);
+      index++;
     }, this);
 
+
     this.$._header.destroyClientControls();
-    this.$._header.createComponents(items, { owner: this });
+    // x2 !
+    this.$._header.createComponents(components.concat(morecomponents), { owner: this });
     this.$._header.render();
 
     var headers = this.$._header.getClientControls();
@@ -120,10 +125,7 @@ enyo.kind({
 
   // tapping a header item slides that panel into the active position
   headeritemTapHandler: function(inSender, inEvent) {
-    var panel = this.getActive();
-    if (panel.name !== inSender.panelname) {
-      this.setIndexByName(inSender.panelname);
-    }
+    this.setIndex(inSender.index);
     return;
   },
 
@@ -131,22 +133,29 @@ enyo.kind({
   moveHandler: function(params) {
     // params.position is -1 to 1 reflecting amount of forward or backwared
     // drag since the last arrangement.
-    if (this.$._header) {
-      var headers = this.$._header.getClientControls();
-      if (headers && headers.length > 1) {
-        var header0 = headers[0];
-        var header1 = headers[1];
-      }
+
+    if (!this.$._header) { return true; }
+    var headers = this.$._header.getClientControls();
+    if (!headers || !headers[0]) { return true; }
+
+    var delta = (this.toIndex - this.fromIndex);
+    var width = 0;
+    var offset = (headers[0].getBounds().width) * -1;
+
+    // FIXME: currently only supports sliding back one header, but forward multiple
+    if (delta < 0) {
+      delta = 0;
+      width = offset * -1;
     }
 
-    if (header0) {
-      var header = header0;
-      if (this.toIndex > this.fromIndex) {
-        header = header1;
+    // TODO: cache width values
+    for (var i=1; (i <= delta); i++) {
+      if (headers[i]) {
+        width += headers[i].getBounds().width;
       }
-      var width = ((header0.getBounds().width) * -1) + (params.position * header.getBounds().width);
-      enyo.dom.transform(this.$._header, { translateX: (width + "px") || null, translateY: null });
     }
+    width = offset + (params.position * width);
+    enyo.dom.transform(this.$._header, { translateX: (width + "px") || null, translateY: null });
 
     return true;
   },
