@@ -31,8 +31,6 @@ enyo.kind({
   },
 
   arrange: function(inC, inIndex) {
-
-    var index = inIndex;
     var panels = this.c$;
 
     if (panels.length == 1) {
@@ -116,7 +114,7 @@ enyo.kind({
   destroy: function() {
     var panels = this.container.getPanels();
     enyo.forEach(panels, function(panel, index) {
-      enyo.Arranger.positionControl(panel, {left: null, top: null});
+      enyo.Arranger.positionControl(panel, { left: null, top: null });
       enyo.Arranger.opacifyControl(panel, 1);
       panel.applyStyle("left", null);
       panel.applyStyle("top", null);

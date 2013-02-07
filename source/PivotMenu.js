@@ -39,7 +39,6 @@ enyo.kind({
   },
 
   handlers: {
-    onTransitionStart: "panelsTransitionStartHandler",
     onTransitionFinish: "panelsTransitionFinishHandler"
   },
 
@@ -49,10 +48,6 @@ enyo.kind({
   ],
 
   //* @protected
-  rendered: function() {
-    this.inherited(arguments);
-  },
-
   initComponents: function() {
     this.createChrome(this.chrome);
     this.inherited(arguments);
@@ -133,6 +128,7 @@ enyo.kind({
   moveHandler: function(params) {
     // params.position is -1 to 1 reflecting amount of forward or backwared
     // drag since the last arrangement.
+    if (!params || typeof(params.position) == 'undefined') { return true; }
 
     if (!this.$._header) { return true; }
     var headers = this.$._header.getClientControls();
@@ -143,6 +139,7 @@ enyo.kind({
     var offset = (headers[0].getBounds().width) * -1;
 
     // FIXME: currently only supports sliding back one header, but forward multiple
+    // need to just 'wrap' around the array gathering widths
     if (delta < 0) {
       delta = 0;
       width = offset * -1;
@@ -158,9 +155,6 @@ enyo.kind({
     enyo.dom.transform(this.$._header, { translateX: (width + "px") || null, translateY: null });
 
     return true;
-  },
-
-  panelsTransitionStartHandler: function() {
   },
 
   panelsTransitionFinishHandler: function() {
