@@ -39,7 +39,7 @@ enyo.kind({
     }
 
     var offset = 1; // only offset one when rotating panels, dont center
-    var orderedPanels = this.getOrderedControls(Math.floor(index) - offset);
+    var orderedPanels = this.getOrderedControls(Math.floor(inIndex) - offset);
     var width = this.containerBounds.width;
     var left = width * offset * -1;
 
