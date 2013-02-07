@@ -5,12 +5,20 @@ PivotMenu - an Enyo 2.0 kind to roughy emulate the Windows Phone 8 Pivot Menu co
 
 You can side between panels by either tapping the headers or dragging the panels.
 
+See example in "sample" directory.
+
 
 NOTES:
 
 - if there are only two panels, and sliding backward rather than forward, the visible panel appears to be moving in the wrong direction.
 
+
+website sample : http://www.ryanwatkins.net/software/pivotmenu
+
+Requires the 'layout' Enyo library for Panel/Arranger components.
+
 Tested platforms include: Chrome 24+, Safari 6.0.2+, Firefox 17+, Windows Phone 8.0
+
 
 Copyright © 2013 Ryan Watkins <ryan@ryanwatkins.net>
 
