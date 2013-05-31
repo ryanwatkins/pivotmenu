@@ -43,8 +43,8 @@ enyo.kind({
   },
 
   chrome: [
-    { name: "_title", classes: "rwatkins-pivotmenu-title", content: "", allowHtml: true },
-    { name: "_header", classes: "rwatkins-pivotmenu-header" }
+    { name: "_pivotmenu_title", classes: "rwatkins-pivotmenu-title", content: "", allowHtml: true },
+    { name: "_pivotmenu_header", classes: "rwatkins-pivotmenu-header" }
   ],
 
   //* @protected
@@ -58,7 +58,7 @@ enyo.kind({
     var p = this.controlParent || this;
     var panels = [];
     enyo.forEach(p.children, function(child) {
-      if ((child.name !== "_title") && (child.name !== "_header")) {
+      if ((child.name !== "_pivotmenu_title") && (child.name !== "_pivotmenu_header")) {
         panels.push(child);
       }
     });
@@ -69,16 +69,16 @@ enyo.kind({
     this.inherited(arguments);
     var panel = this.getActive();
 
-    // change _title to match panel
-    if (panel.title && this.$._title) {
-      if (panel.title !== this.$._title.getContent()) {
-        this.$._title.setContent(panel.title);
+    // change _pivotmenu_title to match panel
+    if (panel.title && this.$._pivotmenu_title) {
+      if (panel.title !== this.$._pivotmenu_title.getContent()) {
+        this.$._pivotmenu_title.setContent(panel.title);
       }
     }
   },
 
   createHeaders: function() {
-    if (!this.$._header) { return; }
+    if (!this.$._pivotmenu_header) { return; }
     var index = this.index - 1;
 
     var panels = this.layout.getOrderedControls(this.index);
@@ -103,19 +103,19 @@ enyo.kind({
     }, this);
 
 
-    this.$._header.destroyClientControls();
+    this.$._pivotmenu_header.destroyClientControls();
     // x2 !
-    this.$._header.createComponents(components.concat(morecomponents), { owner: this });
-    this.$._header.render();
+    this.$._pivotmenu_header.createComponents(components.concat(morecomponents), { owner: this });
+    this.$._pivotmenu_header.render();
 
-    var headers = this.$._header.getClientControls();
+    var headers = this.$._pivotmenu_header.getClientControls();
     var header = headers[0];
 
     var l = "0px";
     if (header) {
       l = (header.getBounds().width * -1) + "px";
     }
-    enyo.dom.transform(this.$._header, { translateX: l, translateY: null });
+    enyo.dom.transform(this.$._pivotmenu_header, { translateX: l, translateY: null });
   },
 
   // tapping a header item slides that panel into the active position
@@ -130,8 +130,8 @@ enyo.kind({
     // drag since the last arrangement.
     if (!params || typeof(params.position) == 'undefined') { return true; }
 
-    if (!this.$._header) { return true; }
-    var headers = this.$._header.getClientControls();
+    if (!this.$._pivotmenu_header) { return true; }
+    var headers = this.$._pivotmenu_header.getClientControls();
     if (!headers || !headers[0]) { return true; }
 
     var delta = (this.toIndex - this.fromIndex);
@@ -152,7 +152,7 @@ enyo.kind({
       }
     }
     width = offset + (params.position * width);
-    enyo.dom.transform(this.$._header, { translateX: (width + "px") || null, translateY: null });
+    enyo.dom.transform(this.$._pivotmenu_header, { translateX: (width + "px") || null, translateY: null });
 
     return true;
   },
